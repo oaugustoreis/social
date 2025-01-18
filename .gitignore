@@ -82,8 +82,9 @@ target/
 *.log
 *.pot
 *.pyc
-__pycache__/
-local_settings.py
+redesocial/redesocial/settings.py
 
 .env
 db.sqlite3
+redesocial/__pycache__/urls.cpython-312.pyc
+redesocial/__pycache__/settings.cpython-312.pyc
