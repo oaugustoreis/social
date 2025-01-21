@@ -1,0 +1,22 @@
+.bg {
+    background-color: #0B2545;
+}
+
+.btn {
+    background-color: #134074;
+}
+
+.back {
+    background-color: #d9d9d9;
+}
+
+.btn:hover {
+    background-color: #144379;
+}
+
+.containerPattern {
+    background-image: radial-gradient(#144379, #0B2545);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-color: orange;
+}

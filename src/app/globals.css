@@ -1,0 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=Funnel+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+:root {
+  --background: #d9d9d9;
+  --foreground: #ffffff;
+  --primary: #134074;
+  --secondary: #0B2545;
+  --hover: #144379;
+}
+
+body{
+  color: var(--foreground);
+  background-color: var(--background);
+  font-family: "Funnel Sans", serif;
+}
+.navMenu{
+  background-color: var(--secondary);
+}
+.navMenu li:hover {
+  transition: all .2s;
+  background-color: var(--primary);
+}
+.navMenu li:last-child {
+  background-color: transparent;
+}
