@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from .serializers import NoteSerializer, UsersSerializer
-from rest_framework.permissions import IsAuthenticated
+from .serializers import NoteSerializer, UsersSerializer, UserRegistrationSerializer
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from .models import Note, Users
 from rest_framework.response import Response
 
@@ -17,13 +17,13 @@ class CustomTokenObtainPairView(TokenObtainPairView):
         try:
             response = super().post(request, *args, **kwargs)
             tokens = response.data
-            acess_token = tokens["access"]
+            access_token = tokens["access"]
             refresh_token = tokens["refresh"]
             res = Response()
-            res.data = {"sucess": True}
+            res.data = {"Login Success": True}
             res.set_cookie(
                 key="access_token",
-                value=acess_token,
+                value=access_token,
                 httponly=True,
                 secure=True,
                 samesite="None",
@@ -40,7 +40,59 @@ class CustomTokenObtainPairView(TokenObtainPairView):
             return res
         except Exception as e:
 
-            return Response({"sucess": False})
+            return Response({"Login success": False})
+
+
+class CustomTokenRefreshView(TokenRefreshView):
+    def post(self, request, *args, **kwargs):
+        try:
+            refresh_token = request.COOKIES.get("refresh_token")
+            request.data["refresh"] = refresh_token
+
+            response = super().post(request, *args, **kwargs)
+            tokens = response.data
+            access_token = tokens["access"]
+            res = Response()
+            res.data = {"refreshed": True}
+            res.set_cookie(
+                key="access_token",
+                value=access_token,
+                httponly=True,
+                secure=True,
+                samesite="None",
+                path="/",
+            )
+            return res
+        except:
+            return Response({"refreshed": False})
+
+
+@api_view(["POST"])
+def logout(request):
+    try:
+        res = Response()
+        res.data = {"sucess": True}
+        res.delete_cookie("refresh_token", path="/", samesite="None")
+        res.delete_cookie("access_token", path="/", samesite="None")
+        return res
+    except:
+        res = Response({"sucess": False})
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def is_authenticated(request):
+    return Response({"authenticated": True})
+
+
+@api_view(["POST"])
+@permission_classes([AllowAny])
+def register(request):
+    serializer = UserRegistrationSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+    return Response(serializer.errors)
 
 
 @api_view(["GET"])
