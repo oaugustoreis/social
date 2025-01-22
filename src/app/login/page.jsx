@@ -3,17 +3,16 @@ import { useState } from "react";
 import styles from "./login.module.css";
 import { motion } from "motion/react"
 import Link from 'next/link';
+import {login} from '../../api/api';
 import { useRouter } from 'next/navigation';
 export default function Login() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const router = useRouter();
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(username);
-        console.log(password);
-        router.push("/home");
-
+        const res = await login(username, password)
+        router.push('/')
     }
     return (
         <div className={` flex items-center justify-center h-screen`}>
