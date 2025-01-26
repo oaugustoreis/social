@@ -20,7 +20,11 @@ class CustomTokenObtainPairView(TokenObtainPairView):
             access_token = tokens["access"]
             refresh_token = tokens["refresh"]
             res = Response()
-            res.data = {"Login Success": True}
+            res.data = {
+                "success": True,
+                "access_token": access_token,
+                "refresh_token": refresh_token,
+            }
             res.set_cookie(
                 key="access_token",
                 value=access_token,
@@ -40,7 +44,7 @@ class CustomTokenObtainPairView(TokenObtainPairView):
             return res
         except Exception as e:
 
-            return Response({"Login success": False})
+            return Response({"success": False})
 
 
 class CustomTokenRefreshView(TokenRefreshView):
@@ -68,15 +72,17 @@ class CustomTokenRefreshView(TokenRefreshView):
 
 
 @api_view(["POST"])
+@permission_classes([AllowAny])
 def logout(request):
     try:
         res = Response()
-        res.data = {"sucess": True}
+        res.data = {"success": True}
         res.delete_cookie("refresh_token", path="/", samesite="None")
         res.delete_cookie("access_token", path="/", samesite="None")
         return res
     except:
-        res = Response({"sucess": False})
+        res = Response({"success": False})
+        return res
 
 
 @api_view(["POST"])
