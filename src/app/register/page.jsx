@@ -2,17 +2,30 @@
 import { useState } from "react";
 import styles from "./login.module.css";
 import { motion } from "motion/react"
+import { register } from "../../api/api";
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+
 export default function Register() {
+
     const [username, setUsername] = useState("");
+    const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const router = useRouter();
-    const handleSubmit = (e) => {
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(username);
-        console.log(password);
-        router.push("/home");
+        try {
+            const res = await register(username, email, password);
+            if (res) {
+                router.push("/");
+            }else{
+                throw new Error('Failed to register');
+            }
+
+        } catch (err) {
+            router.push("/register");
+        }
 
     }
     return (
@@ -34,8 +47,8 @@ export default function Register() {
                             <input onChange={(e) => setUsername(e.target.value)} type="text" id="username" name="username" className={`${styles.btn} w-full px-3 py-2 drop-shadow-md rounded-full cursor-pointer hover:bg-blue-900 focus:outline-none`} />
                         </div>
                         <div className="mb-4">
-                            <label className=" text-md font-bold mb-2" htmlFor="username">Email:</label>
-                            <input onChange={(e) => setUsername(e.target.value)} type="text" id="username" name="username" className={`${styles.btn} w-full px-3 py-2 drop-shadow-md rounded-full cursor-pointer hover:bg-blue-900 focus:outline-none`} />
+                            <label className=" text-md font-bold mb-2" htmlFor="email">Email:</label>
+                            <input onChange={(e) => setEmail(e.target.value)} type="text" id="email" name="email" className={`${styles.btn} w-full px-3 py-2 drop-shadow-md rounded-full cursor-pointer hover:bg-blue-900 focus:outline-none`} />
                         </div>
                         <div className="mb-4">
                             <label className=" text-md font-bold mb-2" htmlFor="password">Password:</label>

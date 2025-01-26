@@ -3,17 +3,29 @@ import { useState } from "react";
 import styles from "./login.module.css";
 import { motion } from "motion/react"
 import Link from 'next/link';
-import {login} from '../../api/api';
+import { login } from '../../api/api';
 import { useRouter } from 'next/navigation';
 export default function Login() {
+
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const router = useRouter();
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const res = await login(username, password)
-        router.push('/')
+        try {
+            const res = await login(username, password)
+            if (res.success) {
+                localStorage.setItem('token', res.access_token)
+                localStorage.setItem("refresh_token", res.refresh_token)
+                router.push('/')
+            }
+        }catch (err) {
+            console.log(err)
+        }
     }
+
+    
     return (
         <div className={` flex items-center justify-center h-screen`}>
             <motion.div

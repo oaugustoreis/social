@@ -19,9 +19,13 @@ body{
 .navMenu{
   background-color: var(--secondary);
 }
-.navMenu li:hover {
+.btn:hover,.navMenu li:hover {
   transition: all .2s;
   background-color: var(--primary);
+}
+.btn{
+  background-color: var(--secondary);
+  color: var(--foreground);
 }
 .navMenu li:last-child {
   background-color: transparent;

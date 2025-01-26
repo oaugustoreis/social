@@ -33,20 +33,23 @@ function ProfileCard() {
     }
 
     return (
-        <div className='text-black flex items-center flex-col justify-center h-screen'>
-            {
-                data.map((note) => (
-                    <div key={note.id} className="bg-white max-w-72 shadow-lg my-3 rounded-lg overflow-hidden">
-                        <div className="p-4">
-                            <div  className='mb-4'>
-                                <p className="tracking-wide text-sm font-bold text-gray-700">{note.owner}</p>
-                                <p className="text-3xl w-62 text-gray-900">{note.description}</p>
-                                <p className="text-sm text-gray-600">{status}</p>
+        <div className='text-black flex py-2 justify-around items-center flex-col h-full'>
+            <div className='h-5/6 overflow-auto'>
+
+                {
+                    data.map((note) => (
+                        <div key={note.id} className="bg-white max-w-72 shadow-lg my-3 rounded-lg">
+                            <div className="p-4">
+                                <div className='mb-4'>
+                                    <p className="tracking-wide text-sm font-bold text-gray-700">{note.owner}</p>
+                                    <p className="text-3xl w-62 text-gray-900">{note.description}</p>
+                                    <p className="text-sm text-gray-600">{status}</p>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                ))
-            }
+                    ))
+                }
+            </div>
         </div>
     );
 }
