@@ -33,21 +33,21 @@ function NavBar({ setActiveComponent, auth }) {
   return (
 
     <>
-      <div className='my-3 flex items-center navMenu drop-shadow-md px-5 py-2 rounded-lg gap-4'>
+      <div className='my-3 flex items-center justify-center navMenu drop-shadow-md px-5 py-2 rounded-lg'>
         <motion.ul
           initial={{ opacity: 0, scale: 0 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ type: "Spring", duration: 0.1, delay: 0 }}
-          className='flex space-x-4 '
+          className='flex justify-around w-full space-x-4 '
         >
           <li className='flex items-center py-1 px-3 rounded-md'>
             <button onClick={() => setActiveComponent('home')}>Home</button>
           </li>
           <li className='flex items-center py-1 px-3 rounded-md'>
-            <button onClick={() => setActiveComponent('profile')}>Profile</button>
+            <button onClick={() => setActiveComponent('profile')}>Notas</button>
           </li>
           <li>
-            <button onClick={handleLogout} className='bg-indigo-500 bg-red-500 text-white drop-shadow-md font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline'>Sair</button>
+            <button onClick={handleLogout} className=' bg-red-500 text-white drop-shadow-md font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline'>Sair</button>
           </li>
         </motion.ul>
       </div>

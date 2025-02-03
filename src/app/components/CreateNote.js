@@ -5,18 +5,33 @@ import { faPaperPlane } from '@fortawesome/free-regular-svg-icons'
 import { faXmark } from '@fortawesome/free-solid-svg-icons'
 import Plus from './Plus'
 import { useState } from 'react'
+import { create_note, get_notes } from '../../api/api'
+import { useRouter } from 'next/navigation'
 
-
-export default function CreateNote() {
-
+export default function CreateNote({ setData }) {
     const [open, setOpen] = useState(false)
     const [note, setNote] = useState('')
-    const createNote = () => {
-        console.log('Create note: ', note)
-    }
+    
+    const router = useRouter()
+    const createNote = async () => {
+        try {
+            // const res = true
+            const res = await create_note(note)
 
+            if (res) {
+                const notes = await get_notes();
+                setData(notes);
+                setOpen(false);
+            } else {
+                router.push("/login")
+            }
+        }
+        catch (error) {
+            console.error('Error creating note:', error);
+        }
+    }
     return (
-        <div className='text-black flex items-center justify-center relative'>
+        <div className='text-black flex items-center  justify-center '>
             {
                 open ? (
                     <motion.div
@@ -26,13 +41,13 @@ export default function CreateNote() {
                             duration: 0.2,
                             scale: { type: "spring", visualDuration: 0.2, bounce: 0.2 },
                         }}
-                        className="absolute z-10 bottom-1" // Adicionando position absolute e z-index
                     >
-                        <div className='bg-white max-w-96 shadow-lg rounded-lg overflow-hidden'>
-                            <div className='p-2 create flex items-center justify-center'>
-                                <div className='flex items-center justify-around '>
+                        
+                        <div className='bg-white shadow-lg rounded-lg overflow-hidden'>
+                            <div className='p-2 px-3 create flex bg items-center justify-center'>
+                                <div className='flex items-center justify-between  '>
                                     <button onClick={() => setOpen(false)} className="rounded-full text-white p-3 font-bold flex items-center justify-center rounded">
-                                        <FontAwesomeIcon icon={faXmark} className='text-md text-black ' />
+                                        <FontAwesomeIcon icon={faXmark} className='text-md text-black ' onClick={()=> setOpenModal(true)} />
                                     </button>
                                     <input onChange={(e) => setNote(e.target.value)} type="text" className="p-2 outline-none" placeholder="Create new note" />
                                     <button onClick={createNote} className="btn rounded-full text-white p-3 font-bold flex items-center justify-center rounded ">
@@ -43,7 +58,7 @@ export default function CreateNote() {
                         </div>
                     </motion.div>
                 ) : (
-                    <div className="w-60 flex relative justify-end">
+                    <div className="w-60 flex justify-end">
                         <Plus setOpen={setOpen} />
                     </div>
                 )

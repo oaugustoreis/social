@@ -1,0 +1,66 @@
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faXmark } from '@fortawesome/free-solid-svg-icons'
+import { motion } from "motion/react"
+import { delete_note, get_notes, edit_note } from '../../api/api'
+import { useState } from 'react';
+export default function EditNote({ setOpenModal, id, note, setData }) {
+    const [editedNote, setEditedNote] = useState(note)
+
+    const editNote = async (id) => {
+        try {
+            const res = await edit_note(id, editedNote)
+            console.log(res);
+            if (res) {
+                const notes = await get_notes();
+                setData(notes);
+                setOpenModal(false)
+            }
+        } catch (error) {
+            console.error('Error editing note:', error);
+        }
+    }
+    const deleteNote = async (id) => {
+        console.log(id);
+        try {
+            const response = await delete_note(id)
+            if (response) {
+                const notes = await get_notes();
+                setData(notes);
+                setOpenModal(false)
+            }
+
+        }
+        catch (error) {
+            console.error('Error deleting note:', error);
+        }
+    }
+    return (
+        <motion.div
+            initial={{ opacity: 0, scale: 1 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{
+                duration: 0.1,
+                scale: { type: "spring", visualDuration: 0.1, bounce: 0 },
+            }}
+            className="fixed bg-gray-200 bg-opacity-80 h-screen w-screen flex justify-center items-center transition">
+            <div className="bg-white w-64 shadow-lg my-3 rounded-lg">
+                <div className="py-2 px-4">
+                    <div className='mb-2'>
+                        <div className="flex items-center justify-between mb-1">
+                            <p className="tracking-wide text-md font-bold text-gray-700">Editar nota</p>
+                            <button type="button" className=" rounded-md flex transition hover:bg-gray-200 py-1 px-2" onClick={() => setOpenModal(false)}>
+                                <FontAwesomeIcon icon={faXmark} className='text-xl' />
+                            </button>
+                        </div>
+                        <textarea onChange={(e) => setEditedNote(e.target.value)} rows="3" className="text-md p-2 rounded-md w-full text-gray-900 bg-gray-100" name="description" id="description" defaultValue={note}></textarea>
+                        <div className='flex justify-around mt-2'>
+                            <button onClick={() => editNote({ id })} className="bg-green-500 p-2 px-3 rounded-full hover:bg-green-400 transition text-md text-white">Salvar</button>
+                            <button onClick={() => deleteNote({ id })} className="bg-red-500 p-2 px-3 rounded-full hover:bg-red-400 transition text-md text-white">Excluir</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </motion.div>
+    );
+}

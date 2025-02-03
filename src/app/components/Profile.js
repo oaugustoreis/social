@@ -1,52 +1,69 @@
 "use client";
-import { useEffect, useState } from 'react';
-import { get_notes } from '../../api/api';
+import { motion } from "motion/react"
+import { format, set } from 'date-fns';
+import styles from "./Profile.module.css";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPenToSquare } from '@fortawesome/free-regular-svg-icons'
+import { pt } from 'date-fns/locale';
 import React from 'react';
-
-function ProfileCard() {
-    const [data, setData] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const status = "Disponível";
-
-    useEffect(() => {
-        const fetchNotes = async () => {
-            try {
-                const notes = await get_notes();
-                setData(notes);
-            } catch (err) {
-                setError(err.message);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchNotes();
-    }, []);
-
-    if (loading) {
-        return <div className='text-black flex items-center justify-center h-screen'>Loading...</div>;
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import EditNote from './EditNote'
+function ProfileCard({ data, setData }) {
+    const router = useRouter();
+    const [openModal, setOpenModal] = useState(false)
+    const [note, setNote] = useState(null)
+    const [id, setId] = useState(null)
+    const editNote = async (id, description) => {
+        try {
+            setOpenModal(true)
+            setNote(description)
+            setId(id)
+        } catch (error) {
+            console.error('Error editing note:', error);
+        }
     }
-
-    if (error) {
-        return <div className='text-black flex items-center justify-center h-screen'>Error: {error}</div>;
+    if (!Array.isArray(data)) {
+        return <p>No notes available.</p>;
     }
-
     return (
-        <div className='text-black flex py-2 justify-around items-center flex-col h-full'>
-            <div className='h-5/6 overflow-auto'>
-
+        <div className='text-black flex py-2 justify-center items-center flex-col h-full'>
+            {
+                openModal && (
+                    <EditNote setOpenModal={setOpenModal} id={id} note={note} setData={setData} />
+                )
+            }
+            <div className={`${styles.width} overflow-auto justify-center flex flex-wrap hide-scrollbar`}>
                 {
                     data.map((note) => (
-                        <div key={note.id} className="bg-white max-w-72 shadow-lg my-3 rounded-lg">
-                            <div className="p-4">
-                                <div className='mb-4'>
-                                    <p className="tracking-wide text-sm font-bold text-gray-700">{note.owner}</p>
-                                    <p className="text-3xl w-62 text-gray-900">{note.description}</p>
-                                    <p className="text-sm text-gray-600">{status}</p>
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{
+                                duration: 0.2,
+                                scale: { type: "spring", visualDuration: 0.2, bounce: 0.2 },
+                            }}
+                            key={note.id} className="mx-3">
+                            <div className="bg-white w-60 shadow-lg my-3 rounded-lg">
+                                <div className="py-2 px-4">
+                                    <div className='mb-2'>
+                                        <div className="flex items-center justify-between">
+                                            <p className="tracking-wide text-md font-bold text-gray-700">@{note.owner_name}</p>
+                                            <button type="button" className=" rounded-md transition hover:bg-gray-200 p-1 px-2" onClick={() => editNote(note.id, note.description)}>
+                                                <FontAwesomeIcon icon={faPenToSquare} className='text-xl ' />
+                                            </button>
+                                        </div>
+                                        <p className="text-3xl w-full overflow-hidden text-ellipsis text-gray-900">{note.description}</p>
+                                        <p className="text-sm text-gray-600">
+                                            {format(new Date(note.data), "dd 'de' MMMM 'de' yyyy, HH:mm", { locale: pt })}
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                            <div className="flex flex-col gap-4 items-center justify-around">
+
+                            </div>
+                        </motion.div>
                     ))
                 }
             </div>

@@ -5,7 +5,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body >
-        <title>the Social</title>
+        <title>Quanto eu devo?</title>
         {children}
       </body>
     </html>

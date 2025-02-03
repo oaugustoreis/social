@@ -10,7 +10,6 @@
   --secondary: #0B2545;
   --hover: #144379;
 }
-
 body{
   color: var(--foreground);
   background-color: var(--background);
@@ -29,4 +28,7 @@ body{
 }
 .navMenu li:last-child {
   background-color: transparent;
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Oculta a barra de rolagem */
 }
