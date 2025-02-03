@@ -33,6 +33,10 @@ class UsersSerializer(serializers.ModelSerializer):
 
 
 class NoteSerializer(serializers.ModelSerializer):
+    owner_name = serializers.CharField(
+        source="owner.username", read_only=True
+    )  # ou 'owner.name' se o campo for 'name'
+
     class Meta:
         model = Note
         fields = "__all__"

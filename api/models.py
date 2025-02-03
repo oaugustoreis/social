@@ -23,6 +23,7 @@ class Users(Base):
 
 class Note(models.Model):
     description = models.CharField(max_length=200)
+    data = models.DateTimeField(auto_now_add=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="notes")
 
     def __str__(self):

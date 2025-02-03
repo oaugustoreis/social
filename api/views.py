@@ -110,6 +110,21 @@ def get_note(request):
     return Response(serializer.data)
 
 
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def delete_note(request):
+    try:
+        noteid = request.data["id"]
+        print(noteid)
+        note = Note.objects.get(id=request.data["id"])
+        note.delete()
+        return Response({"success": True})
+    except Note.DoesNotExist:
+        return Response({"success": False, "error": "Note not found"}, status=404)
+    except Exception as e:
+        return Response({"success": False, "error": str(e)}, status=500)
+
+
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def get_users(request):
@@ -118,11 +133,31 @@ def get_users(request):
     return Response(serializer.data)
 
 
-# class UsersViewSet(viewsets.ModelViewSet):
-#     queryset = Users.objects.all()
-#     serializer_class = UsersSerializer
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def create_note(request):
+    try:
+        user = request.user
+        data = request.data
+        data["owner"] = user.id
+        serializer = NoteSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+    except:
+        return Response({"success": False})
 
 
-# class NoteViewSet(viewsets.ModelViewSet):
-#     queryset = Note.objects.all()
-#     serializer_class = NoteSerializer
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def edit_note(request):
+    try:
+        note_id = request.data.get("id")
+        note = Note.objects.get(id=note_id["id"])
+        note.description = request.data.get("description")
+        note.save()
+        return Response({"success": True})
+    except Note.DoesNotExist:
+        return Response({"success": False, "error": "Note not found"}, status=404)
+    except Exception as e:
+        return Response({"success": False, "error": str(e)}, status=500)

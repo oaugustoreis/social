@@ -8,6 +8,9 @@ from .views import (
     logout,
     is_authenticated,
     register,
+    create_note,
+    delete_note,
+    edit_note,
 )
 
 # router = routers.DefaultRouter()
@@ -22,5 +25,8 @@ urlpatterns = [
     path("logout/", logout),
     path("authenticated/", is_authenticated),
     path("register/", register),
+    path("create/", create_note),
+    path("delete/", delete_note),
+    path("edit/", edit_note),
     # path("", include(router.urls)),
 ]
