@@ -10,14 +10,19 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import EditNote from './EditNote'
 function ProfileCard({ data, setData }) {
+
+    
+
     const router = useRouter();
     const [openModal, setOpenModal] = useState(false)
     const [note, setNote] = useState(null)
     const [id, setId] = useState(null)
-    const editNote = async (id, description) => {
+    const [status, setStatus] = useState(null)
+    const editNote = async (id, description, status) => {
         try {
             setOpenModal(true)
             setNote(description)
+            setStatus(status)
             setId(id)
         } catch (error) {
             console.error('Error editing note:', error);
@@ -27,13 +32,13 @@ function ProfileCard({ data, setData }) {
         return <p>No notes available.</p>;
     }
     return (
-        <div className='text-black flex py-2 justify-center items-center flex-col h-full'>
+        <div className='text-black flex py-2 justify-center items-center flex-col h-5/6'>
             {
                 openModal && (
-                    <EditNote setOpenModal={setOpenModal} id={id} note={note} setData={setData} />
+                    <EditNote setOpenModal={setOpenModal} id={id} note={note} setData={setData} status={status} />
                 )
             }
-            <div className={`${styles.width} overflow-auto justify-center flex flex-wrap hide-scrollbar`}>
+            <div className={`flex flex-wrap w-5/6 overflow-auto justify-center hide-scrollbar`}>
                 {
                     data.map((note) => (
                         <motion.div
@@ -49,7 +54,7 @@ function ProfileCard({ data, setData }) {
                                     <div className='mb-2'>
                                         <div className="flex items-center justify-between">
                                             <p className="tracking-wide text-md font-bold text-gray-700">@{note.owner_name}</p>
-                                            <button type="button" className=" rounded-md transition hover:bg-gray-200 p-1 px-2" onClick={() => editNote(note.id, note.description)}>
+                                            <button type="button" className=" rounded-md transition hover:bg-gray-200 p-1 px-2" onClick={() => editNote(note.id, note.description, note.status)}>
                                                 <FontAwesomeIcon icon={faPenToSquare} className='text-xl ' />
                                             </button>
                                         </div>
@@ -57,8 +62,10 @@ function ProfileCard({ data, setData }) {
                                         <p className="text-sm text-gray-600">
                                             {format(new Date(note.data), "dd 'de' MMMM 'de' yyyy, HH:mm", { locale: pt })}
                                         </p>
+
                                     </div>
                                 </div>
+                                
                             </div>
                             <div className="flex flex-col gap-4 items-center justify-around">
 
@@ -66,8 +73,8 @@ function ProfileCard({ data, setData }) {
                         </motion.div>
                     ))
                 }
-            </div>
-        </div>
+            </div >
+        </div >
     );
 }
 

@@ -4,7 +4,7 @@ import { faXmark } from '@fortawesome/free-solid-svg-icons'
 import { motion } from "motion/react"
 import { delete_note, get_notes, edit_note } from '../../api/api'
 import { useState } from 'react';
-export default function EditNote({ setOpenModal, id, note, setData }) {
+export default function EditNote({ setOpenModal, id, note, setData, status }) {
     const [editedNote, setEditedNote] = useState(note)
 
     const editNote = async (id) => {
@@ -53,13 +53,27 @@ export default function EditNote({ setOpenModal, id, note, setData }) {
                                 <FontAwesomeIcon icon={faXmark} className='text-xl' />
                             </button>
                         </div>
+                        {/* {
+                            status ? (
+                                <div className="flex justify-start items-center">
+                                    <p className="text-sm text-gray-600">Pago</p>
+                                    <button type="button">Pagar</button>
+                                </div>
+                            ) : <div className="flex justify-start items-center">
+                                <p className="text-sm text-gray-600">Nao pago</p>
+                                <button type="button">Pagar</button>
+                            </div>
+                        } */}
                         <textarea onChange={(e) => setEditedNote(e.target.value)} rows="3" className="text-md p-2 rounded-md w-full text-gray-900 bg-gray-100" name="description" id="description" defaultValue={note}></textarea>
+
                         <div className='flex justify-around mt-2'>
                             <button onClick={() => editNote({ id })} className="bg-green-500 p-2 px-3 rounded-full hover:bg-green-400 transition text-md text-white">Salvar</button>
                             <button onClick={() => deleteNote({ id })} className="bg-red-500 p-2 px-3 rounded-full hover:bg-red-400 transition text-md text-white">Excluir</button>
                         </div>
+
                     </div>
                 </div>
+
             </div>
         </motion.div>
     );
